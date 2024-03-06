@@ -37,6 +37,8 @@ jobs:
           run: |
             git clone https://${{ secrets.PRIVATE_REPO_ACCESS_TOKEN }}@github.com/learndaxa/WebsiteTemplate.git ../WebsiteTemplate/
             git clone https://${{ secrets.PRIVATE_REPO_ACCESS_TOKEN }}@github.com/learndaxa/WebsiteRenderer.git ../WebsiteRenderer/
+            git clone https://${{ secrets.PRIVATE_REPO_ACCESS_TOKEN }}@github.com/learndaxa/Wiki.git ../Wiki/
+            git clone https://${{ secrets.PRIVATE_REPO_ACCESS_TOKEN }}@github.com/learndaxa/Tutorial.git ../Tutorial/
 
         - name: Install Python dependencies
           run: |
@@ -44,7 +46,7 @@ jobs:
 
         - name: Rendering Markdown to Svelte
           run: |
-            python ../WebsiteRenderer/main.py --goal www --source "docs/" --destination "../WebsiteTemplate/src/routes/"
+            python ../WebsiteRenderer/main.py --goal www --source "docs/" --destination "../WebsiteTemplate/src/routes/" --search-page true --search-page-folders="docs:www,../Wiki/docs:wiki,../Tutorial/docs:tutorial"
 
         - name: Building Static Site
           run: |
@@ -61,6 +63,7 @@ jobs:
           uses: actions/upload-pages-artifact@v1
           with:
             path: "../WebsiteTemplate/build/"
+            
         - name: Deploy to GitHub Pages
           id: deployment
           uses: actions/deploy-pages@v1
